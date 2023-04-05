@@ -1,0 +1,38 @@
+#!/bin/bash
+
+name() {
+  local version=$(plugin::get_version $PLUGIN_SETUP_NAME)
+  echo "setup ($(color::success $version))"
+}
+
+description() {
+  echo "Setup Developer Environment"
+}
+
+usage() {
+  echo "Usage:"
+  echo "  zmicro setup action <language>      - Setup developer language environment"
+  echo "  zmicro setup help                   - Show help"
+}
+
+example() {
+  echo "Example:"
+  echo "  zmicro setup action go"
+  echo "  zmicro setup action node"
+}
+
+core() {
+  name
+  echo ""
+  description
+  echo ""
+  usage
+  echo ""
+  example
+}
+
+run() {
+  core $@
+}
+
+run $@

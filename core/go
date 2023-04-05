@@ -1,0 +1,16 @@
+#!/bin/bash
+
+setup::go() {
+  if [ -z "$GO_VERSION" ]; then
+    log::error "[$(timestamp)] env GO_VERSION is required"
+    return 1
+  fi
+
+  log::info "[$(timestamp)] install gvm ..."
+  zmicro plugin install gvm
+
+  log::info "[$(timestamp)] install go: $GO_VERSION ..."
+  zmicro gvm use $GO_VERSION
+}
+
+export -f setup::go

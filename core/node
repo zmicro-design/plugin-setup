@@ -1,0 +1,52 @@
+#!/bin/bash
+
+setup::node() {
+  if [ -z "$NODE_VERSION" ]; then
+    log::error "[$(timestamp)] env NODE_VERSION is required"
+    return 1
+  fi
+
+  if [ -z "$NPM_TOKEN" ]; then
+    log::error "[$(timestamp)] env NPM_TOKEN is required"
+    return 1
+  fi
+
+  export REGISTRY=${REGISTRY:-"https://registry.npmjs.org"}
+
+  log::info "[$(timestamp)] install nvm ..."
+  zmicro plugin install nvm
+
+  log::info "[$(timestamp)] install node: $NODE_VERSION ..."
+  zmicro nvm use $NODE_VERSION
+
+  if [ "${GITHUB_ACTIONS}" = "true" ]; then
+    log::info "[$(timestamp)] link npm for github actions ..."
+    sudo ln -sf ${ZMICRO_APP_DATA_PATH}/nvm/versions/${NODE_VERSION}/bin/npm /usr/local/bin/npm
+  fi
+
+  # PREFIX
+  local PREFIX="$REGISTRY"
+  if [ -n "$REGISTRY" ]; then
+    # remove http: | https:
+    PREFIX=${PREFIX#http:}
+    PREFIX=${PREFIX#https:}
+
+    # add end slash
+    if [ "$(string::ends_with $PREFIX /)" != "true" ]; then
+      PREFIX="${PREFIX}/"
+    fi
+
+    log::info "[$(timestamp)] set registry: $REGISTRY ..."
+    npm set registry $REGISTRY
+  fi
+
+  log::info "[$(timestamp)] set npm token: $PREFIX:_authToken ..."
+  npm config set $PREFIX:_authToken "$NPM_TOKEN"
+
+  if [ -n "$ALWAYS_WAYS_AUTH" ]; then
+    log::info "[$(timestamp)] set always auth: $PREFIX:always-auth ..."
+    npm config set $PREFIX:always-auth true
+  fi
+}
+
+export -f setup::node
