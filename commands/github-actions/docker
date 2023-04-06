@@ -1,0 +1,43 @@
+#!/bin/bash
+
+help() {
+  echo "Usage:"
+  echo "  zmicro setup github-actions docker"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  # 1. setup
+  log::info "[$(timestamp)] install docker ..."
+  zmicro package install docker
+  log::info "[$(timestamp)] install docker-compose ..."
+  zmicro package install docker-compose
+  log::info "[$(timestamp)] install docker-buildx ..."
+  zmicro package install --bootstrap-service docker-buildx
+
+  # 2. show version
+  docker info
+  
+  # 4. output
+  local DOCKER_VERSION=$(docker --version)
+  log::info "[$(timestamp)] output docker-version($DOCKER_VERSION) ..."
+  echo "docker-version=$DOCKER_VERSION" >> $GITHUB_OUTPUT
+
+  local DOCKER_COMPOSE_VERSION=$(docker-compose --version)
+  log::info "[$(timestamp)] output docker-compose-version($DOCKER_COMPOSE_VERSION) ..."
+  echo "docker-compose-version=$DOCKER_COMPOSE_VERSION" >> $GITHUB_OUTPUT
+
+  local DOCKER_BUILDX_VERSION=$(docker buildx version)
+  log::info "[$(timestamp)] output docker-buildx-version($DOCKER_BUILDX_VERSION) ..."
+  echo "docker-buildx-version=$DOCKER_BUILDX_VERSION" >> $GITHUB_OUTPUT
+}
+
+run() {
+  core $@
+}
+
+run $@
