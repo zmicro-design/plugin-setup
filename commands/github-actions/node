@@ -14,26 +14,36 @@ core() {
   # 1. setup
   log::info "[$(timestamp)] setup node ..."
   zmicro setup language node
+  # 1.1 make env works
+  source $ZMICRO_HOME/plugins/nvm/source
+  
 
   # 2. add to PATH
-  source $ZMICRO_HOME/plugins/nvm/source
   log::info "[$(timestamp)] add $NODE_HOME/bin to PATH"
   echo "$NODE_HOME/bin" >> $GITHUB_PATH
   log::info "[$(timestamp)] add $NODE_USER_HOME/bin to PATH"
   echo "$NODE_USER_HOME/bin" >> $GITHUB_PATH
-
-  # 3. show version
-  log::info "[$(timestamp)] show node version ..."
-  node --version
   
-  # 4. output
+  # 3. output
+  local NVM_VERSION=$(zmicro nvm version)
+  log::info "[$(timestamp)] output nvm-version($NVM_VERSION) ..."
+  echo "nvm-version=$NVM_VERSION" >> $GITHUB_OUTPUT
+  
   local NODE_VERSION=$(node --version)
-  log::info "[$(timestamp)] output node-version($NODE_VERSION)..."
+  log::info "[$(timestamp)] output node-version($NODE_VERSION) ..."
   echo "node-version=$NODE_VERSION" >> $GITHUB_OUTPUT
 
   local NPM_VERSION=$(npm --version)
   log::info "[$(timestamp)] output npm-version($NPM_VERSION) ..."
   echo "npm-version=$NPM_VERSION" >> $GITHUB_OUTPUT
+
+  local YARN_VERSION=$(yarn --version)
+  log::info "[$(timestamp)] output yarn-version($YARN_VERSION) ..."
+  echo "yarn-version=$YARN_VERSION" >> $GITHUB_OUTPUT
+
+  local PNPM_VERSION=$(pnpm --version)
+  log::info "[$(timestamp)] output pnpm-version($PNPM_VERSION) ..."
+  echo "pnpm-version=$PNPM_VERSION" >> $GITHUB_OUTPUT
 }
 
 run() {

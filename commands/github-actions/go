@@ -27,8 +27,13 @@ core() {
   go version
   
   # 4. output
-  log::info "[$(timestamp)] output go-version ..."
-  echo "go-version=$(go version)" >> $GITHUB_OUTPUT
+  local GVM_VERSION=$(zmicro gvm version)
+  log::info "[$(timestamp)] output gvm-version($GVM_VERSION) ..."
+  echo "gvm-version=$GVM_VERSION" >> $GITHUB_OUTPUT
+
+  local GO_VERSION=$(go version)
+  log::info "[$(timestamp)] output go-version($GO_VERSION) ..."
+  echo "go-version=$GO_VERSION" >> $GITHUB_OUTPUT
 }
 
 run() {

@@ -19,7 +19,16 @@ setup::node() {
   log::info "[$(timestamp)] install node: $NODE_VERSION ..."
   zmicro nvm use $NODE_VERSION
 
+  # 1.1 make env works
   source $ZMICRO_HOME/plugins/nvm/source
+
+  # 1.2 install package managers
+  log::info "[$(timestamp)] install yarn ..."
+  npm install -g yarn
+  log::info "[$(timestamp)] install pnpm ..."
+  npm install -g pnpm
+  log::info "[$(timestamp)] install cnpm ..."
+  npm install -g cnpm
 
   # if [ "${GITHUB_ACTIONS}" = "true" ]; then
   #   log::info "[$(timestamp)] link npm for github actions ..."
