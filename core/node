@@ -19,6 +19,8 @@ setup::node() {
   log::info "[$(timestamp)] install node: $NODE_VERSION ..."
   zmicro nvm use $NODE_VERSION
 
+  source $ZMICRO_HOME/plugins/nvm/source
+
   # if [ "${GITHUB_ACTIONS}" = "true" ]; then
   #   log::info "[$(timestamp)] link npm for github actions ..."
   #   sudo ln -sf ${ZMICRO_APP_DATA_PATH}/nvm/versions/${NODE_VERSION}/bin/npm /usr/local/bin/npm
@@ -40,10 +42,12 @@ setup::node() {
     npm set registry $REGISTRY
   fi
 
-  log::info "[$(timestamp)] set npm token: $PREFIX:_authToken ..."
-  npm config set $PREFIX:_authToken "$NPM_TOKEN"
+  if [ -n "$NPM_TOKEN" ]; then
+    log::info "[$(timestamp)] set npm token: $PREFIX:_authToken ..."
+    npm config set $PREFIX:_authToken "$NPM_TOKEN"
+  fi
 
-  if [ -n "$ALWAYS_WAYS_AUTH" ]; then
+  if [ "$ALWAYS_WAYS_AUTH" = "true" ]; then
     log::info "[$(timestamp)] set always auth: $PREFIX:always-auth ..."
     npm config set $PREFIX:always-auth true
   fi
