@@ -1,0 +1,38 @@
+#!/bin/bash
+
+help() {
+  echo "Usage:"
+  echo "  zmicro setup github-actions go"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  # 1. setup
+  log::info "[$(timestamp)] setup go ..."
+  zmicro setup language go
+
+  # 2. add to PATH
+  source $ZMICRO_HOME/plugins/gvm/source
+  log::info "[$(timestamp)] add $GOHOME/bin to PATH"
+  log::info "[$(timestamp)] add $GOPATH/bin to PATH"
+  echo "$GOHOME/bin" >> $GITHUB_PATH
+  echo "$GOPATH/bin" >> $GITHUB_PATH
+
+  # 3. show version
+  log::info "[$(timestamp)] show go version ..."
+  go version
+  
+  # 4. output
+  log::info "[$(timestamp)] output go-version ..."
+  echo "go-version=$(go version)" >> $GITHUB_OUTPUT
+}
+
+run() {
+  core $@
+}
+
+run $@
