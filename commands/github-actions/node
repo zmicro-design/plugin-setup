@@ -1,0 +1,43 @@
+#!/bin/bash
+
+help() {
+  echo "Usage:"
+  echo "  zmicro setup github-actions node"
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  # 1. setup
+  log::info "[$(timestamp)] setup node ..."
+  zmicro setup language node
+
+  # 2. add to PATH
+  source $ZMICRO_HOME/plugins/nvm/source
+  log::info "[$(timestamp)] add $NODE_HOME/bin to PATH"
+  echo "$NODE_HOME/bin" >> $GITHUB_PATH
+  log::info "[$(timestamp)] add $NODE_USER_HOME/bin to PATH"
+  echo "$NODE_USER_HOME/bin" >> $GITHUB_PATH
+
+  # 3. show version
+  log::info "[$(timestamp)] show node version ..."
+  node --version
+  
+  # 4. output
+  local NODE_VERSION=$(node --version)
+  log::info "[$(timestamp)] output node-version($NODE_VERSION)..."
+  echo "node-version=$NODE_VERSION" >> $GITHUB_OUTPUT
+
+  local NPM_VERSION=$(npm --version)
+  log::info "[$(timestamp)] output npm-version($NPM_VERSION) ..."
+  echo "npm-version=$NPM_VERSION" >> $GITHUB_OUTPUT
+}
+
+run() {
+  core $@
+}
+
+run $@

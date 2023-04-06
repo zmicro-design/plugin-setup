@@ -19,10 +19,10 @@ setup::node() {
   log::info "[$(timestamp)] install node: $NODE_VERSION ..."
   zmicro nvm use $NODE_VERSION
 
-  if [ "${GITHUB_ACTIONS}" = "true" ]; then
-    log::info "[$(timestamp)] link npm for github actions ..."
-    sudo ln -sf ${ZMICRO_APP_DATA_PATH}/nvm/versions/${NODE_VERSION}/bin/npm /usr/local/bin/npm
-  fi
+  # if [ "${GITHUB_ACTIONS}" = "true" ]; then
+  #   log::info "[$(timestamp)] link npm for github actions ..."
+  #   sudo ln -sf ${ZMICRO_APP_DATA_PATH}/nvm/versions/${NODE_VERSION}/bin/npm /usr/local/bin/npm
+  # fi
 
   # PREFIX
   local PREFIX="$REGISTRY"
