@@ -41,8 +41,8 @@ core() {
   log::info "[$(timestamp)] output yarn-version($YARN_VERSION) ..."
   echo "yarn-version=$YARN_VERSION" >> $GITHUB_OUTPUT
 
-  # pnpm only works on node >= 16.14
-  if [ "$(semver::compare_gte $NODE_VERSION v16.14)" = "true" ]; then
+  # pnpm only works on node >= 18.12
+  if [ "$(semver::compare_gte $NODE_VERSION v18.12)" = "true" ]; then
     local PNPM_VERSION=$(pnpm --version)
     log::info "[$(timestamp)] output pnpm-version($PNPM_VERSION) ..."
     echo "pnpm-version=$PNPM_VERSION" >> $GITHUB_OUTPUT

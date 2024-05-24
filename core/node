@@ -25,10 +25,14 @@ setup::node() {
   # 1.2 install package managers
   log::info "[$(timestamp)] install yarn ..."
   npm install -g yarn
-  log::info "[$(timestamp)] install pnpm ..."
-  npm install -g pnpm
   log::info "[$(timestamp)] install cnpm ..."
   npm install -g cnpm
+
+  # pnpm only works on node >= 18.12
+  if [ "$(semver::compare_gte $NODE_VERSION v18.12)" = "true" ]; then
+    log::info "[$(timestamp)] install pnpm ..."
+    npm install -g pnpm
+  fi
 
   # if [ "${GITHUB_ACTIONS}" = "true" ]; then
   #   log::info "[$(timestamp)] link npm for github actions ..."
